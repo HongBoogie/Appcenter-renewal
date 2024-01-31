@@ -15,13 +15,17 @@ export default function MemberList({ data }) {
 
     useEffect(() => {
         const fetchData = async () => {
-          const viewData = await axios.get('https://server.inuappcenter.kr/groups/public/all-groups-members').then(res => {
-                setGroup(res.data);
-                console.log(res.data);
-            })
-        }
+            const viewData = await axios
+                .get(
+                    'https://server.inuappcenter.kr/groups/public/all-groups-members'
+                )
+                .then((res) => {
+                    setGroup(res.data);
+                    console.log(res.data);
+                });
+        };
         fetchData();
-      }, [group]);
+    }, [group]);
 
     return (
         <MemberListWrapper>
