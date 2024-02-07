@@ -1,8 +1,7 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import Pagination from '../component/manage/Pagenation';
-import RegisModal from '../container/product/RegisModal';
 import { RMopen, MODopen } from '../modules/ProductSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useCallback } from 'react';
@@ -10,6 +9,7 @@ import ModifyModal from '../container/product/ModifyModal';
 import InOut from '../component/common/InOut';
 import IntroBox from '../component/admin/IntroBox';
 import { introInfo } from '../resource/data/adminInfo';
+import ProductRegis from '../container/product/ProductRegis';
 
 export default function ProductPage() {
     const [data, setData] = useState([]);
@@ -28,14 +28,6 @@ export default function ProductPage() {
     const [selectedProductId, setselectedProductId] = useState(null);
     const contextMenuRef = useRef(null);
     const [productId, setProductId] = useState('');
-
-    //* 수정 기능을 이용할 때 값을 저장하기 위해 사용합니다. */
-    const [editedName, setEditedName] = useState('');
-    const [editedDescription, setEditedDescription] = useState('');
-    const [editedProfileImage, setEditedProfileImage] = useState('');
-    const [editedBlogLink, setEditedBlogLink] = useState('');
-    const [editedEmail, setEditedEmail] = useState('');
-    const [editedGitRepositoryLink, setEditedGitRepositoryLink] = useState('');
 
     // 페이지네이션을 구현할때 사용합니다.
     const [currentPage, setCurrentPage] = useState(1);
@@ -63,18 +55,6 @@ export default function ProductPage() {
         dispatch(MODopen());
     };
 
-    useEffect(() => {
-        const memberToEdit = data.find((item) => item.id === selectedProductId);
-        if (memberToEdit) {
-            setEditedName(memberToEdit.name);
-            setEditedDescription(memberToEdit.description);
-            setEditedProfileImage(memberToEdit.profileImage);
-            setEditedBlogLink(memberToEdit.blogLink);
-            setEditedEmail(memberToEdit.email);
-            setEditedGitRepositoryLink(memberToEdit.gitRepositoryLink);
-        }
-    }, [selectedProductId]);
-
     const addData = () => {
         dispatch(RMopen());
         scrollLock();
@@ -94,7 +74,7 @@ export default function ProductPage() {
                 .then((res) => {
                     isLoading(false);
                     setData(res.data);
-                    console.log(res.data);
+                    console.log(viewData);
                 });
         };
         fetchData();
@@ -141,6 +121,7 @@ export default function ProductPage() {
             );
         } catch (error) {
             console.error('Error deleting member:', error);
+            alert('삭제에 실패했습니다.');
         }
 
         setContextMenuVisible(false); // 컨텍스트 메뉴 닫기
@@ -201,7 +182,7 @@ export default function ProductPage() {
                     등록
                 </Regisbutton>
             </PaginationContainer>
-            {regisModalOpen && <RegisModal regisModalOpen={regisModalOpen} />}
+            {regisModalOpen && <ProductRegis regisModalOpen={regisModalOpen} />}
             {modifyModalOpen && <ModifyModal id={productId} />}
             {/* 컨텍스트 메뉴 */}
             {contextMenuVisible && (
@@ -239,7 +220,7 @@ const AppImage = styled.img`
 const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
-    margin-top: 20px; /* 조정 가능한 마진 값 */
+    margin-top: 20px;
 `;
 
 const MenuItem = styled.div`
@@ -273,7 +254,7 @@ const ContextMenu = styled.div`
 const Regisbutton = styled.button`
     position: absolute;
     border: none;
-    background-color: grey;
+    background-color: #1e88e5;
     border-radius: 5px;
     color: white;
     width: 5rem;
@@ -296,6 +277,7 @@ const MemberTable = styled.table`
     td {
         padding: 5px;
         text-align: center;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
     }
 
     th {
