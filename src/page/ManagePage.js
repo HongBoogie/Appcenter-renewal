@@ -91,11 +91,10 @@ export default function ManagePage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const viewData = await axios
+            const viewData = await axios //eslint-disable-line no-unused-vars
                 .get('https://server.inuappcenter.kr/members/all-members')
                 .then((res) => {
                     setData(res.data);
-                    console.log(viewData);
                 });
         };
         fetchData();
@@ -169,23 +168,15 @@ export default function ManagePage() {
 
         try {
             // member_id를 사용하여 삭제 요청을 보냅니다.
-            await axios.delete(
-                `https://server.inuappcenter.kr/members/${selectedMemberId}`
-            );
-            console.log(
-                'Member with ID',
-                selectedMemberId,
-                'has been deleted.'
-            );
-
-            // 삭제한 데이터를 data 상태에서 제거합니다.
-            setData((prevData) =>
-                prevData.filter((item) => item.member_id !== selectedMemberId)
-            );
-        } catch (error) {
-            console.error('Error deleting member:', error);
-            alert('삭제에 실패했습니다.');
-        }
+            await axios
+                .delete(
+                    `https://server.inuappcenter.kr/members/${selectedMemberId}`
+                )
+                .then((res) => {
+                    alert(res.data.msg);
+                    console.log(res.data.msg);
+                });
+        } catch (error) {}
 
         setContextMenuVisible(false); // 컨텍스트 메뉴 닫기
     };
@@ -196,6 +187,14 @@ export default function ManagePage() {
             <MemberList>동아리원 목록</MemberList>
             <MemberTable>
                 <tbody>
+                    <MemberBar>
+                        <Cartegories type='first'>이름</Cartegories>
+                        <Cartegories type='second'>이메일</Cartegories>
+                        <Cartegories type='third'>블로그</Cartegories>
+                        <Cartegories type='fourth'>깃허브</Cartegories>
+                        <Cartegories type='fifth'>프로필 이미지</Cartegories>
+                        <Cartegories type='sixth'>자기 소개</Cartegories>
+                    </MemberBar>
                     {getCurrentPageData().map((content) => (
                         <tr
                             key={content.member_id}
@@ -213,9 +212,9 @@ export default function ManagePage() {
                             <td>{content.name}</td>
                             <td>
                                 {content.email ? (
-                                    <>{content.email}</>
+                                    <div>{content.email}</div>
                                 ) : (
-                                    'no Email'
+                                    <div>없음</div>
                                 )}
                             </td>
                             <td>
@@ -225,10 +224,10 @@ export default function ManagePage() {
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >
-                                        Visit Blog
+                                        블로그 링크
                                     </a>
                                 ) : (
-                                    'no Blog'
+                                    <div>없음</div>
                                 )}
                             </td>
                             <td>
@@ -238,24 +237,30 @@ export default function ManagePage() {
                                         target='_blank'
                                         rel='noopener noreferrer'
                                     >
-                                        github
+                                        깃허브 링크
                                     </a>
                                 ) : (
-                                    'no Github'
+                                    <div>없음</div>
                                 )}
                             </td>
                             <td>
                                 {content.profileImage ? (
-                                    <>{content.profileImage}</>
+                                    <a
+                                        href={content.profileImage}
+                                        alt=''
+                                        type='link'
+                                    >
+                                        이미지 링크
+                                    </a>
                                 ) : (
-                                    'no profileImage'
+                                    <div type='link'>없음</div>
                                 )}
                             </td>
                             <td>
                                 {content.description ? (
-                                    <>{content.description}</>
+                                    <div>{content.description}</div>
                                 ) : (
-                                    'no description'
+                                    <div>없음</div>
                                 )}
                             </td>
                         </tr>
@@ -344,6 +349,38 @@ export default function ManagePage() {
     );
 }
 
+const MemberBar = styled.div`
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    transform: translate(-8rem);
+`;
+
+const Cartegories = styled.div`
+    width: 80px;
+    height: 20px;
+    border-radius: 8px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f2f2f2;
+    position: absolute;
+    font-size: 0.9rem;
+    ${(props) =>
+        props.type === 'first'
+            ? 'left: 8rem; width: 60px;'
+            : props.type === 'second'
+            ? 'left:11rem; width: 180px;'
+            : props.type === 'third'
+            ? 'left: 21rem; width: 183px;'
+            : props.type === 'fourth'
+            ? 'left: 32.4rem; width: 150px;'
+            : props.type === 'fifth'
+            ? 'left: 45em; width: 220px;'
+            : 'left: 51rem; width: 190px;'}
+`;
+
 const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -357,7 +394,7 @@ const ModalContainer = styled(Modal)`
     justify-content: center;
     background-color: #fff;
     border-radius: 8px;
-    border: 2px solid grey;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     width: 500px;
     margin: 0 auto;
@@ -457,14 +494,16 @@ const Regisbutton = styled.button`
 `;
 
 const MemberTable = styled.table`
-    width: 900px;
-    margin: 20px auto 20px auto;
+    width: 500px;
+    margin: 20px auto;
 
     td {
+        width: 90px;
         padding: 6px;
         text-align: center;
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
+        text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
 
@@ -472,6 +511,13 @@ const MemberTable = styled.table`
         font-weight: 700;
         padding: 5px;
         text-align: center;
+    }
+
+    div {
+        width: 150px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     a {

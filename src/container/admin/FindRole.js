@@ -4,7 +4,7 @@ import axios from 'axios';
 import Modal from 'react-modal'; // react-modal 라이브러리 import
 import { RoleModalclose } from '../../modules/ProductSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setRoleId } from '../../modules/idSlice';
+import { setRoleId, setRoleName } from '../../modules/idSlice';
 
 export default function FindRole() {
     const dispatch = useDispatch();
@@ -25,7 +25,8 @@ export default function FindRole() {
         document.body.style.removeProperty('overflow');
     }, []);
 
-    const findData = async () => {
+    const findData = async (e) => {
+        e.preventDefault();
         try {
             const newMemberEncode = encodeURIComponent(newMember);
             const result = await axios.get(
@@ -42,9 +43,10 @@ export default function FindRole() {
         }
     };
 
-    const setId = (id) => {
+    const setId = (id, name) => {
         console.log(id);
         dispatch(setRoleId(id));
+        dispatch(setRoleName(name));
         closeModal();
     };
 
@@ -55,22 +57,28 @@ export default function FindRole() {
                 onRequestClose={closeModal}
                 contentLabel='Edit Role Modal'
             >
-                <ModalTitle>이름으로 역할 찾기</ModalTitle>
-                <ModalName>이름</ModalName>
-                <ModalInput
-                    type='text'
-                    placeholder='이름을 입력해주세요'
-                    value={newMember}
-                    onChange={(e) => setNewMember(e.target.value)}
-                />
-                <ModalButton onClick={findData}>검색</ModalButton>
+                <RoleForm onSubmit={findData}>
+                    <ModalTitle>이름으로 역할 찾기</ModalTitle>
+                    <ModalName>이름</ModalName>
+                    <ModalInput
+                        type='text'
+                        placeholder='이름을 입력해주세요'
+                        value={newMember}
+                        onChange={(e) => setNewMember(e.target.value)}
+                    />
+                    <ModalButton type='submit'>검색</ModalButton>
+                </RoleForm>
                 <ModalTemplate>
                     <ModalHeader type='name'>번호</ModalHeader>
                     <ModalHeader>이름</ModalHeader>
                 </ModalTemplate>
                 <>
                     {data.map((member, index) => (
-                        <LabelWrapper onClick={() => setId(member.roleId)}>
+                        <LabelWrapper
+                            onClick={() =>
+                                setId(member.roleId, member.roleName)
+                            }
+                        >
                             <ModalLabel type='name'>{member.roleId}</ModalLabel>
                             <ModalLabel>{member.roleName}</ModalLabel>
                         </LabelWrapper>
@@ -80,10 +88,14 @@ export default function FindRole() {
         </>
     );
 }
+
+const RoleForm = styled.form`
+    width: 100%;
+`;
+
 const ModalName = styled.div`
     margin-bottom: 5px;
     margin-right: auto;
-    margin-left: 0.5rem;
 `;
 
 const ModalHeader = styled.div`
@@ -166,7 +178,7 @@ const ModalInput = styled.input`
 `;
 
 const ModalButton = styled.button`
-    background-color: grey;
+    background-color: #1e88e5;
     color: #fff;
     border: none;
     border-radius: 4px;

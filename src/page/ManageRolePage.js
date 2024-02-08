@@ -81,11 +81,10 @@ export default function ManageRolePage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const viewData = await axios
+            const viewData = await axios //eslint-disable-line no-unused-vars
                 .get('https://server.inuappcenter.kr/roles/all-roles')
                 .then((res) => {
                     setData(res.data);
-                    console.log(viewData);
                 });
         };
         fetchData();
@@ -151,18 +150,23 @@ export default function ManageRolePage() {
 
         try {
             // member_id를 사용하여 삭제 요청을 보냅니다.
-            await axios.delete(
-                `https://server.inuappcenter.kr/roles/${selectedRoleId} `
-            );
-            console.log('Member with ID', selectedRoleId, 'has been deleted.');
-
-            // 삭제한 데이터를 data 상태에서 제거합니다.
-            setData((prevData) =>
-                prevData.filter((item) => item.roleId !== selectedRoleId)
-            );
+            await axios
+                .delete(
+                    `https://server.inuappcenter.kr/roles/${selectedRoleId} `
+                )
+                .then((res) => {
+                    alert(res.data.msg);
+                    console.log(res.data.msg);
+                    // 삭제한 데이터를 data 상태에서 제거합니다.
+                    setData((prevData) =>
+                        prevData.filter(
+                            (item) => item.roleId !== selectedRoleId
+                        )
+                    );
+                });
         } catch (error) {
             console.error('Error deleting member:', error);
-            alert('삭제에 실패했습니다.');
+            alert(error);
         }
 
         setContextMenuVisible(false); // 컨텍스트 메뉴 닫기
@@ -174,6 +178,10 @@ export default function ManageRolePage() {
             <IntroBox introInfo={introInfo[2]} />
             <MemberList>역할 목록</MemberList>
             <MemberTable>
+                <MemberBar>
+                    <Cartegories type='first'>역할 ID</Cartegories>
+                    <Cartegories type='second'>역할 이름</Cartegories>
+                </MemberBar>
                 <tbody>
                     {getCurrentPageData().map((content) => (
                         <tr
@@ -253,6 +261,30 @@ export default function ManageRolePage() {
         </>
     );
 }
+const MemberBar = styled.div`
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    transform: translate(-8rem);
+`;
+
+const Cartegories = styled.div`
+    width: 80px;
+    height: 20px;
+    border-radius: 8px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f2f2f2;
+    position: absolute;
+    ${(props) =>
+        props.type === 'first'
+            ? 'left: 8rem; width: 180px;'
+            : props.type === 'second'
+            ? 'left:19rem; width: 420px;'
+            : 'left: 41rem; width: 170px;'}
+`;
 
 const PaginationContainer = styled.div`
     display: flex;
@@ -267,7 +299,7 @@ const ModalContainer = styled(Modal)`
     justify-content: center;
     background-color: #fff;
     border-radius: 8px;
-    border: 2px solid grey;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     width: 500px;
     margin: 0 auto;

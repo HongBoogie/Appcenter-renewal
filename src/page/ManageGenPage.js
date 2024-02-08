@@ -63,7 +63,7 @@ export default function ManageGenPage() {
         );
         if (memberToEdit) {
             setEditedRole(memberToEdit.role);
-            setEditedGen(memberToEdit.generation);
+            setEditedGen(memberToEdit.year);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedGroupId]);
@@ -83,13 +83,12 @@ export default function ManageGenPage() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const viewData = await axios
+            const viewData = await axios //eslint-disable-line no-unused-vars
                 .get(
                     'https://server.inuappcenter.kr/groups/public/all-groups-members'
                 )
                 .then((res) => {
                     setData(res.data);
-                    console.log(viewData);
                 });
         };
         fetchData();
@@ -121,9 +120,11 @@ export default function ManageGenPage() {
 
         // 수정할 데이터를 가져옵니다.
         const updatedData = {
-            role: editedRole,
-            generation: editedGen,
+            part: editedRole,
+            year: editedGen,
         };
+
+        console.log(updatedData);
 
         try {
             // group_id를 사용하여 수정 요청을 보냅니다.
@@ -156,7 +157,7 @@ export default function ManageGenPage() {
         try {
             // member_id를 사용하여 삭제 요청을 보냅니다.
             await axios.delete(
-                `https://server.inuappcenter.kr/groups?${selectedGroupId}`
+                `https://server.inuappcenter.kr/groups/${selectedGroupId}`
             );
             console.log('Member with ID', selectedGroupId, 'has been deleted.');
 
@@ -166,7 +167,7 @@ export default function ManageGenPage() {
             );
         } catch (error) {
             console.error('Error deleting member:', error);
-            alert('삭제에 실패했습니다.');
+            alert(error);
         }
 
         setContextMenuVisible(false); // 컨텍스트 메뉴 닫기
@@ -179,6 +180,11 @@ export default function ManageGenPage() {
             <MemberList>편성 목록</MemberList>
             <MemberTable>
                 <tbody>
+                    <MemberBar>
+                        <Cartegories type='first'>이름</Cartegories>
+                        <Cartegories type='second'>역할 이름</Cartegories>
+                        <Cartegories>기수</Cartegories>
+                    </MemberBar>
                     {getCurrentPageData().map((content) => (
                         <tr
                             key={content.group_id}
@@ -237,7 +243,7 @@ export default function ManageGenPage() {
                 onRequestClose={closeEditModal}
                 contentLabel='Edit Member Modal'
             >
-                <ModalTitle>역할 수정</ModalTitle>
+                <ModalTitle>기수 수정</ModalTitle>
                 <ModalLabel>파트</ModalLabel>
                 <ModalInput
                     type='text'
@@ -259,6 +265,31 @@ export default function ManageGenPage() {
     );
 }
 
+const MemberBar = styled.div`
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    transform: translate(-8rem);
+`;
+
+const Cartegories = styled.div`
+    width: 80px;
+    height: 20px;
+    border-radius: 8px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f2f2f2;
+    position: absolute;
+    ${(props) =>
+        props.type === 'first'
+            ? 'left: 8rem; width: 220px;'
+            : props.type === 'second'
+            ? 'left:18rem; width: 340px;'
+            : 'left: 35.7rem; width: 155px;'}
+`;
+
 const PaginationContainer = styled.div`
     display: flex;
     justify-content: center;
@@ -272,7 +303,7 @@ const ModalContainer = styled(Modal)`
     justify-content: center;
     background-color: #fff;
     border-radius: 8px;
-    border: 2px solid grey;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
     padding: 20px;
     width: 500px;
     margin: 0 auto;
