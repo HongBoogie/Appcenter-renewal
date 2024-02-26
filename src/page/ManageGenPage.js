@@ -205,7 +205,7 @@ export default function ManageGenPage() {
                             <td>{content.role}</td>
                             <td>{content.year}</td>
                             <td>{content.part ?? <div>{content.part}</div>}</td>
-                            <td>{content.email}</td>
+                            <td type='email'>{content.email}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -288,14 +288,14 @@ const Cartegories = styled.div`
     position: absolute;
     ${(props) =>
         props.type === 'first'
-            ? 'left: 8rem; width: 90px;'
+            ? 'left: 8rem; width: 120px;'
             : props.type === 'second'
-            ? 'left:13rem; width: 100px;'
+            ? 'left:15rem; width: 100px;'
             : props.type === 'third'
-            ? 'left: 18rem; width: 100px;'
+            ? 'left: 21rem; width: 120px;'
             : props.type === 'fourth'
-            ? 'left: 22.5rem; width: 120px;'
-            : 'left: 28.5rem; width: 270px;'}
+            ? 'left: 28rem; width: 120px;'
+            : 'left: 34rem; width: 180px;'}
 `;
 
 const PaginationContainer = styled.div`
@@ -415,12 +415,20 @@ const MemberTable = styled.table`
     margin: 20px auto 20px auto;
 
     td {
+        width: 90px;
         padding: 6px;
         text-align: center;
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
         border-radius: 4px;
         overflow: hidden;
         white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        ${(props) =>
+        props.type === 'email'
+            ? 'width: 150px;' : ''}
 
     th {
         font-weight: 700;
@@ -431,6 +439,13 @@ const MemberTable = styled.table`
     a {
         color: #0078d4;
         text-decoration: none;
+    }
+
+    div {
+        width: 90px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
     }
 
     tr {

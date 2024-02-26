@@ -98,7 +98,7 @@ const MemberForm = styled.form`
 `;
 
 const ModalName = styled.div`
-    margin-bottom: 5px;
+    margin-bottom: -3px;
     margin-right: auto;
     margin-left: 0.5rem;
 `;
