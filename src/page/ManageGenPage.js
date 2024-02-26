@@ -415,7 +415,7 @@ const MemberTable = styled.table`
     margin: 20px auto 20px auto;
 
     td {
-        width: 90px;
+        width: 160px;
         padding: 6px;
         text-align: center;
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
@@ -426,9 +426,7 @@ const MemberTable = styled.table`
         overflow: hidden;
         white-space: nowrap;
 
-        ${(props) =>
-        props.type === 'email'
-            ? 'width: 150px;' : ''}
+        ${(props) => (props.type === 'email' ? 'width: 150px;' : '')}
 
     th {
         font-weight: 700;
