@@ -604,7 +604,8 @@ const MemberTable = styled.table`
 
     a {
         display: block;
-        width:100px;
+        min-width: 80px;
+        max-width: 120px;
         color: #0078d4;
         text-decoration: none;
         text-overflow: ellipsis;

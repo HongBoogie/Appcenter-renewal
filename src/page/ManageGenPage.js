@@ -272,36 +272,26 @@ export default function ManageGenPage() {
 const MemberBar = styled.div`
     display: flex;
 
-    justify-content: center;
-    align-items: center;
+    width: 800px;
     height: 40px;
-    transform: translate(-8rem);
 `;
 
 const Cartegories = styled.div`
-    width: 80px;
+    min-width: 174px;
+    width: 20%;
     height: 20px;
     border-radius: 8px;
+    justify-content: center;
     text-align: center;
     padding: 10px 0;
     background-color: #f2f2f2;
-    position: absolute;
-    ${(props) =>
-        props.type === 'first'
-            ? 'left: 8rem; width: 120px;'
-            : props.type === 'second'
-            ? 'left:15rem; width: 100px;'
-            : props.type === 'third'
-            ? 'left: 21rem; width: 120px;'
-            : props.type === 'fourth'
-            ? 'left: 28rem; width: 120px;'
-            : 'left: 34rem; width: 180px;'}
 `;
 
 const PaginationContainer = styled.div`
     display: flex;
+    overflow: scroll;
     justify-content: center;
-    margin-top: 20px;
+    align-items: center;
 `;
 
 const ModalContainer = styled(Modal)`
@@ -394,15 +384,13 @@ const ContextMenu = styled.div`
 `;
 
 const Regisbutton = styled.button`
-    position: absolute;
     border: none;
     background-color: #1e88e5;
     border-radius: 5px;
     color: white;
     width: 5rem;
     height: 2rem;
-    margin-left: 37rem;
-    margin-top: 0.6rem;
+    margin-left: 2rem;
 
     &:hover {
         transition: 0.1s ease-in;
@@ -411,11 +399,14 @@ const Regisbutton = styled.button`
 `;
 
 const MemberTable = styled.table`
-    width: 600px;
+    display: flex;
+    flex-direction: column;
+    width: 800px;
     margin: 20px auto 20px auto;
 
     td {
-        width: 160px;
+        min-width: 160px;
+        width: 20%;
         padding: 6px;
         text-align: center;
         box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
@@ -423,8 +414,6 @@ const MemberTable = styled.table`
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
 
         ${(props) => (props.type === 'email' ? 'width: 150px;' : '')}
 
@@ -440,7 +429,7 @@ const MemberTable = styled.table`
     }
 
     div {
-        width: 90px;
+        width: 20%;
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
